@@ -1,112 +1,139 @@
-{% extends "posts/base.html" %}
+    
+{% extends "posts/index.html" %}
 {% load static %}
 
 
-{% block fortitle %}Home{% endblock fortitle %}
+{% block fortitle %} {% endblock fortitle %}
+{% block forstyle %}
+
+{%endblock forstyle %}
 
 {% block forcontent %}
 
 
+    <!-- wrapper-one Wrapper  -->
+    <div class="wrapper-one">
 
-            <!-- PostOne Posts Start -->
-            <div class="post-one-wrapper">
 
+                <!-- POSTS Wrapper  -->
+                <div class="posts-wrapper">
 
+                <!-- POSTS Grid  -->
+                <div class="posts-grid" id="refresh-main-posts">
+                    
                     {% for post in posts %}
-                  
-                    <div class="post-one" data-url="{{post.get_absolute_url}}">
-                        <div class="post-one-header" >
-                            <div class="post-one-date">{{post.get_display_date|date:"d" }}{{post.get_display_date|date:"M Y" }}</div>
-                            <img src="{{post.image_url}}" alt="post thumbnail" class="post-one-img">
+                        
+                    <!-- POST Start -->
+                    <div class="post" data-url="{{post.get_absolute_url}}">
+                        <div class="post-ab-info">
+                            {% if post.author.profile_picture %}
+                            <img src="{{post.author.profile_picture.url }}" alt="" class="post-ab-info-img">
+                            {%else%}
+                            <img src="{% static 'posts/images/default_profile.png' %}" alt="" class="post-ab-info-img">
+                            {%endif%}
+                            <div class="author-name">{{post.author.username|default:"public user"}}</div>
+                            <!-- <div class="status-text">Bending Text</div> -->
                         </div>
-                        <div class="post-one-content">
-                           <div class="post-one-title" data-url="{{post.get_absolute_url}}">{{post.title}}</div>
-                            <i class="fa-solid fa-arrow-up-right-from-square icon"></i>
+                        <div class="post-content">
+                            <div class="post-title" data-url="{{post.get_absolute_url}}">{{post.title}}</div>
+                            <div class="post-img-container">
+                                <img src="{{post.image_url}}" alt="Image">
+                            </div>
                         </div>
+                        <div class="post-dlc-info">
+                            <div class="post-dlc-icon"> <i class="fa-regular fa-thumbs-up"></i></div>
+                            <div class="post-dlc-icon"><i class="fa-solid fa-comment"></i></i></div>
+                            <div class="post-dlc-date">{{post.get_display_date|date:"d" }}{{post.get_display_date|date:"M Y" }}</div>
+                            </div>
                     </div>
+                    <!-- POST END -->
                     
                     {% empty %}
-                    <p>No Posts Available.</p>
+                    <p>Posts Not Available.</p>
                     {% endfor %}
-            
-            
-            
+
+
+            </div>
+            <!-- POSTS Grid  END-->
+            </div>
+            <!-- POST Wrapper  END-->
+
+
+        <!-- adds-Wrapper-big-->
+        <div class="adds-wrapper-big">
+
+        </div>    
+        <!-- adds-Wrapper-big END-->
+
+
+        
+            <!-- pagination Wrapper  -->
+            {% comment %} <div class="pagination-wrapper ">
+                <div class="pagination-container">
+                    <a href="?page=1">First</a>
+                    <a href="?page=prev">Previous</a>
+                    <span>Page 1 of 10</span>
+                    <a href="?page=next">Next</a>
+                    <a href="?page=last">Last</a>
                 </div>
-            <!-- PostOne Posts End -->
-            
-            
-            
-            
-                    <!-- Popular Posts Start -->
-                    <div class="popular-post-container">
-            
-             
-            
-                        {% if popular_posts %}
-                        {% for popular in popular_posts %}
-                        <div class="popular-post" data-url="{{popular.get_absolute_url}}">
-                            <img src="{{popular.image_url}}" alt="Image">
-                            <div class="popular-post-content">
-                                <div class="popular-post-title">{{popular.title}}</div>
-                                <div class="popular-post-date-and-icon popular-post-date">
-                                    <time datetime="" >{{popular.get_display_date|date:"d" }}{{popular.get_display_date|date:"M Y" }}</time>
-                                    <i class="fa-solid fa-arrow-up-right-from-square green-post-icon"></i>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                        {% endif %} 
-                      
+            </div> {% endcomment %}
+            <!-- pagination Wrapper  END-->
 
 
-
-            
-                                    
-
-                        
-            
-                                    
-            
-                    </div>
-            <!-- Popular Posts End -->
-            
-            
-            
-            <!-- Scrollable Posts Start -->
-            <div class="scrollable-container-wrapper">
-            
-                <div class="scroll-indicator scroll-indicator-left"><i class="fa fa-arrow-left"></i></div>
-                 <div class="scrollable-container">
-                  
-                    {% if more_popular_posts %}
-                    {% for morepopular in more_popular_posts %}
-                        <div class="scrollable-post" data-url="{{morepopular.get_absolute_url}}">
-                            <div class="scrollable-post-content">
-                                <div class="scrollable-post-date">{{morepopular.get_display_date|date:"d" }}{{morepopular.get_display_date|date:"M Y" }}</div>
-                                <i class="fa-solid fa-arrow-up-right-from-square scrollable-post-icon"></i>
-                                    <img src="{{morepopular.image_url}}" alt="image">
-                                <div class="scrollable-post-title"> {{morepopular.title}}</div>
-                            </div>
-                        </div>
-                        {%endfor%}
-                        {%endif%}
-            
-                </div>
-                <div class="scroll-indicator scroll-indicator-right"><i class="fa fa-arrow-right"></i> </div>
-                
-           </div>
-            <!-- Scrollable Post END -->
-            
-
-
- {% endblock forcontent %}
-
-
- {% block forscript %}
- <script>
-
+    </div>
+    <!-- wrapper-one Wrapper  -->
+    
 
     
-</script>
-{% endblock forscript %}
+    <!-- wrapper-two Wrapper -->
+    <div class="wrapper-two">
 
+            <!-- smallpost-list -->
+        <div class="smallposts-list">
+
+
+
+            {% if popular_posts %}
+            {% for popular in popular_posts %}
+            <div class="smallpost" data-url="{{popular.get_absolute_url}}">
+                <div class="smallpost-img-title">
+                    <img src="{{popular.image_url}}" alt="Image" alt="image" class="smallpost-img">
+                    <div class="smallpost-title">{{popular.title}}</div>
+                </div>
+                <div class="smallpost-meta">
+                    <span class="smallpost-author">{{popular.author.username|default:"public user"}}</span>
+                    <span class="smallpost-date">{{popular.get_display_date|date:"d" }}{{popular.get_display_date|date:"M Y" }}</span>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}             
+
+
+        </div>  
+        <!-- smallpost-list END -->
+
+
+        <!-- adds-wrapper-small -->
+        <div class="adds-wrapper-small">
+                    
+        </div>
+        <!-- adds-wrapper-small END-->
+
+
+    </div>
+        <!-- wrapper-two Wrapper END-->
+
+
+
+
+{% endblock forcontent %} 
+
+
+{% block forscript %}
+<script text="text/javascript" src="{% static 'posts/js/home.js'%}"></script>
+<script>
+
+
+   
+</script>
+{% endblock forscript%}

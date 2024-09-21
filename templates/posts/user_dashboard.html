@@ -1,166 +1,158 @@
+    
+{% extends "posts/index.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'posts/css/user_dashboard.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard</title>
-    <style></style>
-  </head>
 
-  <body>
+{% block fortitle %} {% endblock fortitle %}
+{% block forstyle %}
+
+{%endblock forstyle %}
+
+{% block forcontent %}
 
 
+    <!-- wrapper-one Wrapper  -->
+    <div class="wrapper-one">
 
 
-    <div class="message-container">
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li class="message {{ message.tags }}">{{ message }}</li>
+                <!-- POSTS Wrapper  -->
+                <div class="posts-wrapper">
+
+                <!-- POSTS Grid  -->
+                <div class="posts-grid" id="refresh-main-posts">
+                    
+                    {% for post in posts %}
+                        
+                    <!-- POST Start -->
+                    <div class="post" data-url="{{post.get_absolute_url}}">
+                        <div class="post-ab-info">
+                            {% if post.author.profile_picture %}
+                            <img src="{{post.author.profile_picture.url }}" alt="" class="post-ab-info-img">
+                            {%else%}
+                            <img src="{% static 'posts/images/default_profile.png' %}" alt="" class="post-ab-info-img">
+                            {%endif%}
+                            <div class="author-name">{{post.author.username|default:"public user"}}</div>
+                            <!-- <div class="status-text">Bending Text</div> -->
+                        </div>
+                        <div class="post-content">
+                            <div class="post-title" data-url="{{post.get_absolute_url}}">{{post.title}}</div>
+                            <div class="post-img-container">
+                                <img src="{{post.image_url}}" alt="Image">
+                            </div>
+                        </div>
+                        <div class="post-dlc-info">
+                            <div class="post-dlc-icon"> <i class="fa-regular fa-thumbs-up"></i></div>
+                            <div class="post-dlc-icon"><i class="fa-solid fa-comment"></i></i></div>
+                            <div class="post-dlc-date">{{post.get_display_date|date:"d" }}{{post.get_display_date|date:"M Y" }}</div>
+                            </div>
+                    </div>
+                    <!-- POST END -->
+                    
+                    {% empty %}
+                    <p>Posts Not Available.</p>
+                    {% endfor %}
+
+
+            </div>
+            <!-- POSTS Grid  END-->
+            </div>
+            <!-- POST Wrapper  END-->
+
+
+        <!-- adds-Wrapper-big-->
+        <div class="adds-wrapper-big">
+
+        </div>    
+        <!-- adds-Wrapper-big END-->
+
+
+        
+            <!-- pagination Wrapper  -->
+            {% comment %} <div class="pagination-wrapper ">
+                <div class="pagination-container">
+                    <a href="?page=1">First</a>
+                    <a href="?page=prev">Previous</a>
+                    <span>Page 1 of 10</span>
+                    <a href="?page=next">Next</a>
+                    <a href="?page=last">Last</a>
+                </div>
+            </div> {% endcomment %}
+            <!-- pagination Wrapper  END-->
+
+
+    </div>
+    <!-- wrapper-one Wrapper  -->
+    
+
+    
+    <!-- wrapper-two Wrapper -->
+    <div class="wrapper-two">
+
+            <!-- smallpost-list -->
+        <div class="smallposts-list">
+
+
+
+            {% if popular_posts %}
+            {% for popular in popular_posts %}
+            <div class="smallpost" data-url="{{popular.get_absolute_url}}">
+                <div class="smallpost-img-title">
+                    <img src="{{popular.image_url}}" alt="Image" alt="image" class="smallpost-img">
+                    <div class="smallpost-title">{{popular.title}}</div>
+                </div>
+                <div class="smallpost-meta">
+                    <span class="smallpost-author">{{popular.author.username|default:"public user"}}</span>
+                    <span class="smallpost-date">{{popular.get_display_date|date:"d" }}{{popular.get_display_date|date:"M Y" }}</span>
+                </div>
+            </div>
             {% endfor %}
-        </ul>
-        {% endif %}
-     </div>
-  
+            {% endif %}             
 
 
+        </div>  
+        <!-- smallpost-list END -->
 
-    <a href="javascript:history.back()" class="go-back-link">
-      <i class="fa-solid fa-arrow-left"></i>Go Back To Home
-    </a>
 
-    <div class="dashboard-container">
-          <!-- User Profile Section -->
-          <div class="user-profile">
-            <div class="profile-row">
-              <div class="profile-image">
-                <img src="{{request.user.profile_picture.url}}" alt="Profile Image" />
-              </div>
-              <div class="profile-info">
-                <p>{{request.user.username}}</p>
-                <p>{{request.user.email}}</p>
-              </div>
-            </div>
-            <div class="profile-stats">
-              <p>Published Post: {{published_count}}</p>
-              <p>Pending Posts: {{bending_count}}</p>
-            </div>
-          </div>
+        <!-- adds-wrapper-small -->
+        <div class="adds-wrapper-small">
+                    
+        </div>
+        <!-- adds-wrapper-small END-->
+
+
+    </div>
+        <!-- wrapper-two Wrapper END-->
 
 
 
 
-          <!-- User Posts Section Start-->
-          <div class="user-posts">
-
-              <div class="select-section">
-                
-                <button class="create-post-btn"  id="create-brn-url">Write Post 
-                  <i class="fa-solid fa-pen-to-square create-post-icon"></i></button>
-
-                <select class="post-select" id="post-select" onchange="filterPosts()">
-                  <option class="option"  value="all">All</option>
-                  <option class="option"  value="pending">Pending Posts</option>
-                  <option class="option"  value="published">Published Posts</option>
-                </select>
-
-              </div>
+{% endblock forcontent %} 
 
 
-                <!-- Post Grid  Start -->
-              <div class="posts-grid" id="posts-grid">
-                
+{% block forscript %}
+<script text="text/javascript" src="{% static 'posts/js/home.js'%}"></script>
+<script>
 
-                {% if published_posts.count == 0 and bending_posts.count == 0 %}
-                <p class="no-posts">You don't have any posts</p>
-                {% endif %}
-
-
-
-                <!-- Published Posts Start -->
-                 {% if published_posts %}
-                {% for post in published_posts %}
-                <div class="post-item published" data-url="{% url 'blogpost:user-dashboard-post-detail' slug=post.slug %}">
-                  <div class="post-date">{{post.get_display_date|date:"d" }}{{post.get_display_date|date:"M Y" }}</div>
-                  <div class="post-image">
-                    <img src="{{post.thumbnail.url}}" alt="Image" />
-                  </div>
-                  <div class="post-title">
-                    <p>{{post.title}}</p>
-                  </div>
-                </div>
-                {% endfor %}
-                {% endif %}
-                <!-- Published Posts End -->
-
-                {% if bending_posts %}
-                <!-- Pending Posts Start -->
-                {% for post in bending_posts %}
-                <div class="post-item pending" data-url="{% url 'blogpost:user-dashboard-post-detail' slug=post.slug %}" style="display: none">
-                  <div class="post-date">{{post.get_display_date|date:"d" }}{{post.get_display_date|date:"M Y" }}</div>
-                  <div class="pending-label">Pending</div>
-                  <div class="post-image">
-                    <img src="{{post.thumbnail.url}}" alt="Image" />
-                  </div>
-                  <div class="post-title">
-                    <p>{{post.title}}</p>
-                  </div>
-                </div>
-                {% endfor %}
-                {% endif %}
-                <!-- Pending Posts End -->
-
-
-              </div>
-              <!--  Post Grid End -->
-
-          </div>
-            <!-- User Posts Section End -->
-
-
-  </div>
-
-    <script>
-      function filterPosts() {
-        var select = document.getElementById("post-select");
-        var value = select.value;
-        var posts = document.querySelectorAll(".post-item");
-      
-        posts.forEach(function (post) {
-          if (value === "all") {
-            post.style.display = "block";
-          } else if (value === "pending") {
-            post.style.display = post.classList.contains("pending") ? "block" : "none";
-          } else if (value === "published") {
-            post.style.display = post.classList.contains("published") ? "block" : "none";
-          }
+<script>
+    function filterPosts() {
+        const filter = document.getElementById('filter').value;
+        const posts = document.querySelectorAll('.post');
+        posts.forEach(post => {
+            if (filter === 'all') {
+                post.style.display = 'flex';
+            } else {
+                if (post.getAttribute('data-status') === filter) {
+                    post.style.display = 'flex';
+                } else {
+                    post.style.display = 'none';
+                }
+            }
         });
-      }
-      
-      // Call filterPosts initially to show all posts when the page loads
-      document.addEventListener('DOMContentLoaded', function() {
-        filterPosts();
-      
-        document.querySelectorAll('.post-item').forEach(function(div) {
-          div.addEventListener('click', function() {
-            var url = div.getAttribute('data-url');
-            window.location.href = url;
-          });
-        });
-
-        document.getElementById('create-brn-url').addEventListener('click', function() {
-          window.location.href ="{% url 'blogpost:post-create' %}"; 
-        });
+    }
+</script> 
+   
+</script>
+{% endblock forscript%}
 
 
-      });
 
-
-    </script>
-  </body>
-</html>

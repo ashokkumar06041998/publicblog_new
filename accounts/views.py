@@ -46,10 +46,10 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         print("User activated and saved")
-        messages.success(request, f"Thank you {user.username} for your Email Confirmation. Now you can login with your Account")
+        messages.success(request, f"Thank you {user.username} for your Email Confirmation. Now you can SignIn with your Account")
         return redirect('account_app:login')
     else:
-        messages.error(request, "Activation Link is Invalid!")
+        messages.error(request, "Invalid! Activation Link ")
     
     return redirect('blogpost:post-home')
 
@@ -69,24 +69,24 @@ def activate_email(request,user,to_email):
     activation_link = "https://mail.google.com"
     if email.send():
         return (
-            f"Dear <b class='activate-text'>{user.username}</b>, go to your email "
-            f"<b class='activate-text'>{to_email}</b> inbox and click the received "
+            f"Hello <b class='activate-text'>{user.username}</b>, check your email "
+            f"<b class='activate-text'>{to_email}</b> inbox and click activate "
             f"<a href='{activation_link}' target='_blank'  style='text-decoration: underline;' class='activate-text'>activation link</a>"
         )
     else:
-        return f'problem sending the email to {to_email} check if you entered valid email'
+        return f'problem sending the email to {to_email} check if you have provided valid email'
 
 
 
 
 
-def activate_message(username, to_email):
-    activation_link = "https://mail.google.com"
-    return (
-        f"Dear <b class='activate-text'>{username}</b>, go to your email "
-        f"<b class='activate-text'>{to_email}</b> inbox and click the received "
-        f"<a href='{activation_link}' target='_blank'  style='text-decoration: underline;' class='activate-text'>activation link</a>"
-    )
+# def activate_message(username, to_email):
+#     activation_link = "https://mail.google.com"
+#     return (
+#         f"Hello ! <b class='activate-text'>{username}</b>, go to your email"
+#         f"<b class='activate-text'>{to_email}</b>, check inbox"
+#         f"<a href='{activation_link}' target='_blank'  style='text-decoration: underline;' class='activate-text'>get to email(click here)</a>"
+#     )
 
 
 def register_view(request):
@@ -148,7 +148,7 @@ def login_view(request):
         else:
             return JsonResponse({'success': False, 'error': "Account doesn't exist or incorrect Email or Password"})
     
-    response = render(request, 'accounts/login.html')
+    response = render(request, 'accounts/login_register.html')
     # response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     # response['Pragma'] = 'no-cache'
     return response

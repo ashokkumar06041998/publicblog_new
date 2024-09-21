@@ -1,0 +1,319 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <META HTTP-EQUIV="Access-Control-Allow-Origin" CONTENT="http://www.example.org">
+    {% block formeta %} {% endblock formeta%}
+    <link rel="stylesheet" href="{% static 'posts/css/index.css' %}"> 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://kit.fontawesome.com/9cc5263da9.js" crossorigin="anonymous"></script>
+    <title> {% block fortitle %} {% endblock fortitle %}</title>
+    {% block forstyle %}
+
+    {%endblock forstyle %}
+
+
+    <style>
+    /* Add your custom styles here */
+
+
+    </style>
+</head>
+
+<body>
+
+    <div class="header-wrapper">
+
+
+            <header>
+
+                <ul>
+                    <li>
+                        <div class="menu-btn">
+                            <img  class="img-btn-container" src="{% static 'posts/images/menu.png' %}" alt="menu icon">
+                        </div>
+
+                        <div class="menu-box">
+                            <div class="menu-box-item" data-url="{% url 'blogpost:post-home' %}"><i class="fa fa-home"></i><span>Home</span></div>
+                            <div class="menu-box-item" data-url="{% url 'blogpost:post-create' %}"><i class="fa-solid fa-pencil"></i><span>Create</span></div>
+                            
+                            {% if request.user.is_authenticated %}
+                            <div class="menu-box-item" data-url="{% url 'blogpost:user-dashboard' %}"><i class="fa fa-tachometer-alt"></i><span>Dashboard</span></div>
+                            {% endif %}
+
+                            {% if not request.user.is_authenticated %}
+                            <div class="menu-box-item" data-url="{%url 'account_app:register'%}"><i class="fa fa-user-plus"></i><span>SignIn</span></div>
+                            {% endif %}
+
+                            <div class="menu-box-item" id="theme-toggle"><i id="theme-icon" class="fa-regular fa-moon"></i><span>Theme</span></div>
+                            
+                            {% if request.user.is_authenticated %}
+                            <div class="menu-box-item" id="signout-link-two"><i id="theme-icon" class="fas fa-sign-in-alt"></i><span>SignOut</span></div>
+                            {% endif %}
+                            <div class="menu-box-item close-btn"><span>Close</span><i class="fa fa-close"></i></div>
+                        </div>
+                        <!-- for munubar & unfocus other items in screen -->
+                        <div class="menu-overlay"></div>
+
+                    </li>
+
+                    <li>
+                        <div class="logo">WEBSite Name</div>
+                    </li>
+
+                    <li>
+                        <div class="search-icon" id="search-icon">
+                            <div class="img-btn-container"><img src="{% static 'posts/images/search.png' %}" alt="search icon"></div>
+                        </div>
+                    </li>
+                    {% if not request.user.is_authenticated %}
+                    <li class="hide-on-mobile"><a href="{% url 'account_app:login' %}">SignIn/SignUp</a></li>
+                    {%endif%}
+
+                    <li class="hide-on-mobile"><a href="{% url 'blogpost:post-create' %}">Create<i class="fa-solid fa-pencil"></i></a></li>
+
+                    <!-- <li class="hide-on-mobile">
+                        <a   href="#"><i class="  fa-brands fa-square-facebook"  style="color:#0c3974;"></i></a>
+                        <a   href="#"><i class=" fa-brands fa-square-x-twitter" style="color:#4a474c"></i></a>
+                        <a   href="#"><i class=" fa-brands fa-square-instagram" style="color:#db7866" ></i></a>
+                    </li> -->
+                    <li class="hide-on-mobile">
+
+                            <!--  nav-social_btns  -->
+                            <div class="nav-social-btns">
+                                
+                                <div class="nav-social-btn-container">
+                                    <a href="https://facebook.com" target="_blank">
+                                        <img src="{% static 'posts/images/s_fb.png' %}"  alt="Facebook icon">
+                                    </a>
+                                </div>
+
+
+                                <div class="nav-social-btn-container">
+                                    <a href="mailto:your.email@gmail.com" >       
+                                        <img src="{% static 'posts/images/s_email.png' %}"  alt="Email icon">
+                                    </a>
+                                </div>
+
+                                <div class="nav-social-btn-container">
+                                    <a href="https://linkedin.com" target="_blank" >
+                                        <img src="{% static 'posts/images/s_linked.png' %}"  alt="LinkedIn icon">
+                                    </a>
+                                </div>
+
+                                <!-- <div class="nav-social-btn-container">
+                                    <img src="images/s_wa.png" alt="WhatsApp icon">
+                                </div> -->
+
+                                <div class="nav-social-btn-container">
+                                    <a href="https://instagram.com" target="_blank">
+                                        <img src="{% static 'posts/images/s_insta.png' %}"  alt="Instagram icon">
+                                    </a>
+
+                                </div>
+
+                                <div class="nav-social-btn-container">
+                                    <a href="https://twitter.com" target="_blank">
+                                        <img src="{% static 'posts/images/s_x.png' %}"  alt="X (formerly Twitter) icon">
+                                    </a>                             
+                                </div>
+
+                        </div>
+                       <!--  nav-social_btns   END-->
+                    </li>
+
+                    {% if request.user.is_authenticated %}
+                    <li class="hide-on-mobile"><a id="signout-link" href="javascript:void(0);" href="{% url 'account_app:login' %}">SignOut</a></li>
+                    {%endif%}
+
+
+                </ul>
+
+            </header>
+
+            <div class="sub-header">
+                <div class="lc-menu-wrapper">
+                    <div class="lc-menu">
+                        <div class="lc-select-btn">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-item" id="language-button">Language</div>
+                            <div class="dropdown-item" id="category-button">Category</div>
+                        </div>
+                    </div>
+                
+                    <div class="lc-tab-bar-parent">
+                        <div class="lc-scroll-button left"><i class="fa-solid fa-angle-left"></i></div>
+
+
+                        <div class="lc-tab-bar" id="language-tab" style="display: none;">
+                            {% if languages %}
+                            {% for language in languages %}
+                            <span>{{language.name}}</span>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="lc-tab-bar" id="category-tab">
+                            {% if categories  %}
+                            {% for category in categories%}
+                            <span>{{category.name}}</span>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        
+                        {% comment %} <div class="lc-tab-bar" id="language-tab" style="display: none;">
+                            <span>Tamil</span>
+                            <span>English</span>
+                            <span>Hindi</span>
+                            <span>Malayalam</span>
+                            <span>Spanish</span>
+                        </div>
+
+                        <div class="lc-tab-bar" id="category-tab">
+                            <span class="active">Audio</span>
+                            <span>Videos</span>
+                            <span>Photos</span>
+                            <span>Music</span>
+                            <span>Events</span>
+                            <span>Actors</span>
+                            <span>Actress</span>
+                            <span>News</span>
+                            <span>Funny Video</span>
+                            <span>Learn</span>
+                            <span>Politics</span>
+                        </div> {% endcomment %}
+
+                        <div class="lc-scroll-button right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+                <!-- Hidden search box overlay -->
+                <div class="search-overlay" id="search-overlay">
+                    <div class="search-box-container">
+                        <form id="search-form" method="GET" action="{% url 'blogpost:post-home' %}">
+                            <div class="search-group">
+                                <input type="text" id="search-input" name="q" placeholder="Search...">
+                                <button type="submit"><i class="fa fa-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Hidden search box overlay END -->
+
+                
+                  <!--  Content  Wrapper Start -->
+                  <div class="content-wrapper">
+
+                        <!-- Main content goes here -->
+                            {% block forcontent %}
+
+                            {% endblock forcontent %} 
+            
+                 </div>    
+                  <!-- Content Wrapper Wrapper  -->
+
+
+
+
+                            <!-- Footer  Start-->
+                <footer class="footer">
+                    <div class="footer-content"> 
+                    
+                        <div class="social-buttons">
+                            <p class="social-btn unsocial-btn">&copy; 2024 Blog.com · All Rights Reserved</p>
+
+                            <a href="https://privacypolicy.com" class="social-btn">
+                                <i class="fa-solid fa-people-group"></i>About Us
+                            </a>
+
+                            <a href="https://privacypolicy.com"class="social-btn">
+                                <i class="fa-solid fa-lock"></i>Privacy Policy
+                            </a>
+
+
+                            <a href="mailto:your.email@gmail.com" class="social-btn">
+                                <i class="fa-solid fa-at"></i> Contact Us
+                            </a>                
+
+                            <a href="https://facebook.com" target="_blank" class="social-btn">
+                                <i class="fa-brands fa-square-facebook"></i>Facebook 
+                            </a>
+
+                            <a href="https://instagram.com" target="_blank" class="social-btn">
+                                <i class="fa-brands fa-square-instagram"></i> Instagram
+                            </a>
+
+                            <a href="https://linkedin.com" target="_blank" class="social-btn">
+                                <i class="fa-brands fa-linkedin"></i> LinkedIn
+                            </a>
+
+                            <a href="https://twitter.com" target="_blank" class="social-btn">
+                                <i class="fa-brands fa-square-x-twitter"></i>Twitter 
+                            </a>
+
+                        </div>
+                    </div>
+                </footer>
+
+                <!-- Footer END -->
+
+                <!-- Scroll to Top Button -->
+                <button class="floating-scroll-btn" id="scrollToTopBtn">
+                    <!-- <i class="fa-solid fa-floating-arrow-up-from-bracket"></i> -->
+                    <div class="floating-arrow">
+                        <span></span>
+                        <span></span>
+                        <!-- <span></span> -->
+                      </div>
+                </button>
+
+
+        <script text="text/javascript" src="{% static 'posts/js/index.js'%}"></script>
+        <script text="text/javascript" src="{% static 'posts/js/theme.js'%}"></script>
+        <script text="text/javascript" src="{% static 'posts/js/tabbar.js'%}"></script>
+        <script text="text/javascript" src="{% static 'posts/js/menu.js'%}"></script>
+        <script>
+            function getCsrfToken() {
+                var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                return token;
+            }
+        
+        
+            function getUrl() {
+                var url="{% url 'blogpost:post-home' %}";
+                return url;
+            }
+            
+            function getLogoutUrl() {
+                var url="{% url 'account_app:logout' %}";
+                return url;
+            }
+        </script>
+
+        {% block forscript %}
+
+        {% endblock forscript%}
+</body>
+</html>
+
+
+
+
+
+
