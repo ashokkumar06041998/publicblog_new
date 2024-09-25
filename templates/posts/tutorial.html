@@ -1,0 +1,163 @@
+
+
+    
+{% extends "posts/index.html" %}
+{% load static %}
+
+
+{% block fortitle %}how to upload image and youtube link{% endblock fortitle %}
+{% block forstyle %}
+
+{%endblock forstyle %}
+
+{% block forcontent %}
+
+
+    <!-- wrapper-one Wrapper  -->
+    <div class="wrapper-one">
+
+    
+        <!-- tutorial-wrapper Wrapper  -->
+        <div class="tutorial-wrapper">
+          <!-- tutorial-conetnt Wrapper  -->
+            <div class="tutorial-content">
+                <h2>Image and youtube video attach</h2>
+                <div class="tutorial-tab-container">
+                    <select class="tutorial-tab-select" id="tutorialSelect" onchange="showTab(this.value)">
+                        <option value="imageTab">Image Upload</option>
+                        <option value="youtubeTab">YouTube Link</option>
+                    </select>
+                </div>
+    
+                <div id="imageTab" class="tutorial-tab active">
+                    <div class="tutorial-child-section">
+                        <h3>Drag and Drop Image:</h3>
+                        <span>Go to your Computer, right-click the Image you want to add and Drag it into the editor and Drop it</span>
+                        <video src="{% static 'posts/tutorial/image_drag_drop.mp4' %}" controls></video>
+                    </div>
+                    <div class="tutorial-child-section">
+                        <h3>Copy/Paste Image:</h3>
+                        <span>Go to your computer, right-click the Image you want to add, then copy it with Ctrl + C and paste it with Ctrl + V inside Editor</span>
+                        <video src="{% static 'posts/tutorial/image_copy_paste.mp4' %}" controls></video>
+                    </div>
+                    <div class="tutorial-child-section">
+                        <h3>Click/Upload Image:</h3>
+                        <span>Click the Image icon in the Editor, go to Upload in Image Properties, click Browse the image, and send it to Server, then click OK</span>
+                        <video src="{% static 'posts/tutorial/image_click_upload.mp4' %}" controls></video>
+                    </div>
+                </div>
+    
+                <div id="youtubeTab" class="tutorial-tab">
+                    <div class="tutorial-child-section">
+                        <h3>Attach YouTube Embedded Link:</h3>
+                        <video src="{% static 'posts/tutorial/youtube_embedded_upload.mp4' %}" controls></video>
+                    </div>
+                    <div class="tutorial-child-section">
+                        <h3>Attach YouTube Normal Link:</h3>
+                        <video src="{% static 'posts/tutorial/youtube_normal_upload.mp4' %}" controls></video>
+                    </div>
+                </div>
+
+            </div>
+            <!-- tutorial-content END  -->
+
+        </div>
+        <!-- tutorial-wrapper END  -->
+
+        <!-- adds-Wrapper-big-->
+        <div class="adds-wrapper-big">
+
+        </div>    
+        <!-- adds-Wrapper-big END-->
+
+
+        
+            <!-- pagination Wrapper  -->
+            {% comment %} <div class="pagination-wrapper ">
+                <div class="pagination-container">
+                    <a href="?page=1">First</a>
+                    <a href="?page=prev">Previous</a>
+                    <span>Page 1 of 10</span>
+                    <a href="?page=next">Next</a>
+                    <a href="?page=last">Last</a>
+                </div>
+            </div> {% endcomment %}
+            <!-- pagination Wrapper  END-->
+
+
+    </div>
+    <!-- wrapper-one Wrapper  -->
+    
+
+    
+    <!-- wrapper-two Wrapper -->
+    <div class="wrapper-two">
+
+            <!-- smallpost-list -->
+        <div class="smallposts-list">
+
+
+           <h2>Explore More . . .</h2>
+            {% if explore_posts %}
+            {% for post in explore_posts %}
+            <div class="smallpost" data-url="{{post.get_absolute_url}}">
+                <div class="smallpost-img-title">
+                    <img src="{{post.image_url}}" alt="Image" alt="image" class="smallpost-img">
+                    <div class="smallpost-title">{{post.title}}</div>
+                </div>
+                <div class="smallpost-meta">
+                    <span class="smallpost-author">{{post.author.username|default:"public user"}}</span>
+                    <span class="smallpost-date">{{post.get_display_date|date:"d" }}{{post.get_display_date|date:"M Y" }}</span>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}             
+
+
+        </div>  
+        <!-- smallpost-list END -->
+
+
+        <!-- adds-wrapper-small -->
+        <div class="adds-wrapper-small">
+                    
+        </div>
+        <!-- adds-wrapper-small END-->
+
+
+    </div>
+        <!-- wrapper-two Wrapper END-->
+
+
+
+
+{% endblock forcontent %} 
+
+
+{% block forscript %}
+<script>
+    function showTab(tabId) {
+        // Hide all tabs
+        const tabs = document.querySelectorAll('.tutorial-tab');
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        // Show the selected tab
+        const selectedTab = document.getElementById(tabId);
+        selectedTab.classList.add('active');
+    }
+
+    // Auto-show the appropriate tab based on the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const tutorialType = urlParams.get('tutorial'); 
+    if (tutorialType === 'youtube') {
+        showTab('youtubeTab');
+        document.getElementById('tutorialSelect').value = 'youtubeTab'; 
+    } else {
+        showTab('imageTab');
+        document.getElementById('tutorialSelect').value = 'imageTab'; 
+    }
+</script>
+{% endblock forscript%}
+

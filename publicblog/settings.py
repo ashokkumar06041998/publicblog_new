@@ -117,6 +117,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'posts.context_processors.language_category_context',
+                'posts.context_processors.random_posts', 
+                'posts.context_processors.popular_and_more_popular_posts', 
+
             ],
         },
     },

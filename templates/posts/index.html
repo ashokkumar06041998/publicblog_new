@@ -1,5 +1,6 @@
 {% load static %}
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,20 +14,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://kit.fontawesome.com/9cc5263da9.js" crossorigin="anonymous"></script>
     <title> {% block fortitle %} {% endblock fortitle %}</title>
+
     {% block forstyle %}
 
     {%endblock forstyle %}
 
-
-    <style>
-    /* Add your custom styles here */
-
-
-    </style>
 </head>
 
 <body>
-
+    <!-- header-wrapper start-->
     <div class="header-wrapper">
 
 
@@ -37,7 +33,7 @@
                         <div class="menu-btn">
                             <img  class="img-btn-container" src="{% static 'posts/images/menu.png' %}" alt="menu icon">
                         </div>
-
+                    
                         <div class="menu-box">
                             <div class="menu-box-item" data-url="{% url 'blogpost:post-home' %}"><i class="fa fa-home"></i><span>Home</span></div>
                             <div class="menu-box-item" data-url="{% url 'blogpost:post-create' %}"><i class="fa-solid fa-pencil"></i><span>Create</span></div>
@@ -47,7 +43,7 @@
                             {% endif %}
 
                             {% if not request.user.is_authenticated %}
-                            <div class="menu-box-item" data-url="{%url 'account_app:register'%}"><i class="fa fa-user-plus"></i><span>SignIn</span></div>
+                            <div class="menu-box-item" data-url="{%url 'account_app:login'%}"><i class="fa fa-user-plus"></i><span>SignIn</span></div>
                             {% endif %}
 
                             <div class="menu-box-item" id="theme-toggle"><i id="theme-icon" class="fa-regular fa-moon"></i><span>Theme</span></div>
@@ -124,7 +120,7 @@
                                 </div>
 
                         </div>
-                       <!--  nav-social_btns   END-->
+                       <!--  nav-social_btns END-->
                     </li>
 
                     {% if request.user.is_authenticated %}
@@ -136,17 +132,21 @@
 
             </header>
 
+
+            {% if show_subheader %}
+             <!--  sub-header Start-->
             <div class="sub-header">
                 <div class="lc-menu-wrapper">
-                    <div class="lc-menu">
-                        <div class="lc-select-btn">
-                            <i class="fa-solid fa-globe"></i>
+
+                        <div class="lc-menu">
+                                <div class="lc-select-btn">
+                                    <i class="fa-solid fa-globe"></i>
+                                </div>
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-item" id="language-button">Language</div>
+                                    <div class="dropdown-item" id="category-button">Category</div>
+                                </div>
                         </div>
-                        <div class="dropdown-menu">
-                            <div class="dropdown-item" id="language-button">Language</div>
-                            <div class="dropdown-item" id="category-button">Category</div>
-                        </div>
-                    </div>
                 
                     <div class="lc-tab-bar-parent">
                         <div class="lc-scroll-button left"><i class="fa-solid fa-angle-left"></i></div>
@@ -168,36 +168,29 @@
                             {% endif %}
                         </div>
                         
-                        
-                        {% comment %} <div class="lc-tab-bar" id="language-tab" style="display: none;">
-                            <span>Tamil</span>
-                            <span>English</span>
-                            <span>Hindi</span>
-                            <span>Malayalam</span>
-                            <span>Spanish</span>
-                        </div>
-
-                        <div class="lc-tab-bar" id="category-tab">
-                            <span class="active">Audio</span>
-                            <span>Videos</span>
-                            <span>Photos</span>
-                            <span>Music</span>
-                            <span>Events</span>
-                            <span>Actors</span>
-                            <span>Actress</span>
-                            <span>News</span>
-                            <span>Funny Video</span>
-                            <span>Learn</span>
-                            <span>Politics</span>
-                        </div> {% endcomment %}
 
                         <div class="lc-scroll-button right"><i class="fa-solid fa-angle-right"></i></div>
                     </div>
-                </div>
-                
-            </div>
+
+                </div>   
         </div>
+             <!--  sub-header end-->
+        {% endif %}
+
+
+
+        <!-- Dashboard user info block content goes here -->
+        {% block fordashboardheader %}
+
+        {% endblock fordashboardheader %} 
+        <!-- Dashboard user info block content goes here  end-->
+
+
+
+
+
     </div>
+    <!-- header-wrapper start-->
 
 
 
@@ -219,12 +212,10 @@
                 
                   <!--  Content  Wrapper Start -->
                   <div class="content-wrapper">
-
                         <!-- Main content goes here -->
                             {% block forcontent %}
 
                             {% endblock forcontent %} 
-            
                  </div>    
                   <!-- Content Wrapper Wrapper  -->
 
@@ -288,6 +279,7 @@
         <script text="text/javascript" src="{% static 'posts/js/theme.js'%}"></script>
         <script text="text/javascript" src="{% static 'posts/js/tabbar.js'%}"></script>
         <script text="text/javascript" src="{% static 'posts/js/menu.js'%}"></script>
+        <script text="text/javascript" src="{% static 'posts/js/get_wrappers_height.js'%}"></script>
         <script>
             function getCsrfToken() {
                 var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

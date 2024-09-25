@@ -1,30 +1,126 @@
     
 {% extends "posts/index.html" %}
 {% load static %}
+{% load tz %}
 
 
 {% block fortitle %} {% endblock fortitle %}
+
 {% block forstyle %}
 
 {%endblock forstyle %}
 
+<!-- Dashboard user info block content goes here -->
+{% block fordashboardheader %}
+{% comment %} <div class="dboard-user-info-wrapper">
+    <div class="dboard-user-profile">
+        <h2>John Doe</h2>
+        {% if request.user.profile_picture %}
+        <img src="{{request.user.profile_picture.url }}" alt="user profile picture">
+        {%else%}
+        <img src="{% static 'posts/images/default_profile.png' %}" alt="user profile picture">
+        {%endif%}
+    </div>
+
+    <!-- Filter Dropdown -->
+    <div class="dboard-filter-container">
+        <label for="filter">Filter Posts:</label>
+        <select id="filter" onchange="filterPosts()">
+            <option value="all">All</option>
+            <option value="published">Published</option>
+            <option value="pending">Unpublished</option>
+        </select>
+    </div>
+</div> {% endcomment %}
+{% endblock fordashboardheader %} 
+<!-- Dashboard user info block content goes here  end-->
+
+
+
+
 {% block forcontent %}
+
 
 
     <!-- wrapper-one Wrapper  -->
     <div class="wrapper-one">
 
 
+
                 <!-- POSTS Wrapper  -->
                 <div class="posts-wrapper">
 
-                <!-- POSTS Grid  -->
-                <div class="posts-grid" id="refresh-main-posts">
+
+                    <!-- DASHBOARD Wrapper  -->
+                    <div class="dboard-user-info-wrapper">
+                        <div class="dboard-user-profile">
+                            <h2>John Doe</h2>
+                            {% if request.user.profile_picture %}
+                            <img src="{{request.user.profile_picture.url }}" alt="user profile picture">
+                            {%else%}
+                            <img src="{% static 'posts/images/default_profile.png' %}" alt="user profile picture">
+                            {%endif%}
+                        </div>
                     
-                    {% for post in posts %}
-                        
+                        <!-- Filter Dropdown -->
+                        <div class="dboard-filter-container">
+                            <label for="filter">Filter Posts:</label>
+                            <select id="filter" onchange="filterPosts()">
+                                <option value="all">All</option>
+                                <option value="published">Published</option>
+                                <option value="pending">Unpublished</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- DASHBOARD Wrapper  END -->
+
+
+                <!-- POSTS Grid  -->
+                <div class="posts-grid" >
+
+
+                <!-- Published Posts Start -->
+                    {% if published_posts %}
+                    {% for post in published_posts %}
+                                  
                     <!-- POST Start -->
-                    <div class="post" data-url="{{post.get_absolute_url}}">
+                    <div class="post no-overlay" data-url="" data-status="published">
+                            <div class="post-ab-info">
+                                {% if post.author.profile_picture %}
+                                <img src="{{post.author.profile_picture.url }}" alt="" class="post-ab-info-img">
+                                {%else%}
+                                <img src="{% static 'posts/images/default_profile.png' %}" alt="" class="post-ab-info-img">
+                                {%endif%}
+                                <div class="author-name">{{post.author.username|default:"public user"}}</div>
+                                <div class="status-text">published</div> 
+                            </div>
+                            <div class="post-content">
+                                <div class="post-title" data-url="{{post.get_absolute_url}}">{{post.title}}</div>
+                                <div class="post-img-container">
+                                    <img src="{{post.thumbnail.url}}" alt="Image">
+                                </div>
+                            </div>
+
+                            <div class="post-dlc-info">
+                                <div class="post-dlc-icon-text goto-post" data-url="{{ post.get_absolute_url }}"> <i class="fa-solid fa-up-right-from-square"></i><span class"lc-count">read..</span></div>
+                                <div class="post-dlc-icon-text edit-post" data-url="{% url 'blogpost:user-dashboard-post-detail' slug=post.slug %}"><i class="fa-solid fa-pen-clip"></i></i><span class"lc-count">edit..</span></div>
+                                <div class="post-dlc-date">{{post.get_relative_or_normal_date}}</div>
+                            </div>
+                    </div>
+                    <!-- POST END -->
+                    
+                    {% endfor %}
+                    {% endif %}
+                    <!-- Published Posts End -->
+
+
+
+                <!-- Published Posts Start -->
+                {% if bending_posts %}
+                {% for post in bending_posts %}
+                              
+                <!-- POST Start -->
+                <div class="post no-overlay" data-url="" data-status="pending">
                         <div class="post-ab-info">
                             {% if post.author.profile_picture %}
                             <img src="{{post.author.profile_picture.url }}" alt="" class="post-ab-info-img">
@@ -32,25 +128,26 @@
                             <img src="{% static 'posts/images/default_profile.png' %}" alt="" class="post-ab-info-img">
                             {%endif%}
                             <div class="author-name">{{post.author.username|default:"public user"}}</div>
-                            <!-- <div class="status-text">Bending Text</div> -->
+                            <div class="status-text">Unpublished</div> 
                         </div>
                         <div class="post-content">
                             <div class="post-title" data-url="{{post.get_absolute_url}}">{{post.title}}</div>
                             <div class="post-img-container">
-                                <img src="{{post.image_url}}" alt="Image">
+                                <img src="{{post.thumbnail.url}}" alt="Image">
                             </div>
                         </div>
                         <div class="post-dlc-info">
-                            <div class="post-dlc-icon"> <i class="fa-regular fa-thumbs-up"></i></div>
-                            <div class="post-dlc-icon"><i class="fa-solid fa-comment"></i></i></div>
-                            <div class="post-dlc-date">{{post.get_display_date|date:"d" }}{{post.get_display_date|date:"M Y" }}</div>
-                            </div>
-                    </div>
-                    <!-- POST END -->
+                            <div class="post-dlc-icon-text goto-post" data-url="{{ post.get_absolute_url }}"> <i class="fa-solid fa-up-right-from-square"></i><span class"lc-count">read..</span></div>
+                            <div class="post-dlc-icon-text edit-post" data-url="{% url 'blogpost:user-dashboard-post-detail' slug=post.slug %}"><i class="fa-solid fa-pen-clip"></i></i><span class"lc-count">edit..</span></div>
+                            <div class="post-dlc-date">{{post.get_relative_or_normal_date}}</div>
+                        </div>
+                </div>
+                <!-- POST END -->
+                
+                {% endfor %}
+                {% endif %}
+                <!-- Published Posts End -->                    
                     
-                    {% empty %}
-                    <p>Posts Not Available.</p>
-                    {% endfor %}
 
 
             </div>
@@ -93,20 +190,21 @@
 
 
 
-            {% if popular_posts %}
-            {% for popular in popular_posts %}
-            <div class="smallpost" data-url="{{popular.get_absolute_url}}">
+            <h2>Explore More . . .</h2>
+            {% if explore_posts %}
+            {% for post in explore_posts %}
+            <div class="smallpost" data-url="{{post.get_absolute_url}}">
                 <div class="smallpost-img-title">
-                    <img src="{{popular.image_url}}" alt="Image" alt="image" class="smallpost-img">
-                    <div class="smallpost-title">{{popular.title}}</div>
+                    <img src="{{post.image_url}}" alt="Image" alt="image" class="smallpost-img">
+                    <div class="smallpost-title">{{post.title}}</div>
                 </div>
                 <div class="smallpost-meta">
-                    <span class="smallpost-author">{{popular.author.username|default:"public user"}}</span>
-                    <span class="smallpost-date">{{popular.get_display_date|date:"d" }}{{popular.get_display_date|date:"M Y" }}</span>
+                    <span class="smallpost-author">{{post.author.username|default:"public user"}}</span>
+                    <span class="smallpost-date">{{post.get_display_date|date:"d" }}{{post.get_display_date|date:"M Y" }}</span>
                 </div>
             </div>
             {% endfor %}
-            {% endif %}             
+            {% endif %} 
 
 
         </div>  
@@ -132,8 +230,6 @@
 {% block forscript %}
 <script text="text/javascript" src="{% static 'posts/js/home.js'%}"></script>
 <script>
-
-<script>
     function filterPosts() {
         const filter = document.getElementById('filter').value;
         const posts = document.querySelectorAll('.post');
@@ -149,6 +245,32 @@
             }
         });
     }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all the post-dlc-icon elements
+        console.log("dashboard loaded");
+        const gotoPosts = document.querySelectorAll('.goto-post');
+        const editPosts = document.querySelectorAll('.edit-post');
+        
+        // Add click event listeners for each gotoPost
+        gotoPosts.forEach(gotoPost => {
+            const postUrl = gotoPost.getAttribute('data-url');
+            gotoPost.addEventListener('click', function() {
+                window.location.href = postUrl; 
+            });
+        });
+    
+        // Add click event listeners for each editPost
+        editPosts.forEach(editPost => {
+            const editUrl = editPost.getAttribute('data-url');
+            editPost.addEventListener('click', function() {
+                window.location.href = editUrl; 
+            });
+        });
+    });
+    
+
 </script> 
    
 </script>

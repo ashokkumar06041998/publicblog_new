@@ -12,6 +12,8 @@ from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 from django.utils.text import Truncator
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.utils.timezone import now, timedelta
+from django.utils.timesince import timesince
 from django.db import models
 import os
 from django.core.exceptions import ValidationError
@@ -63,8 +65,19 @@ class Post(models.Model):
 
     def get_date_label(self):
         if self.updated and self.updated > self.created:
-            return 'updated at :'
+            return 'edited at :'
         return 'posted at :'
+    
+    # New method for displaying relative time if updated in the last week
+    def get_relative_or_normal_date(self):
+        time_now = now()
+        time_diff = time_now - self.updated  # Difference between current time and updated time
+        
+        # Check if the post was updated within the last 7 days
+        if time_diff <= timedelta(days=7):
+            return timesince(self.updated)  # Return the relative time, e.g. "1 day, 4 hours"
+        else:
+            return self.updated.strftime('%Y-%m-%d %H:%M')  # Return normal date format
 
     def save(self, *args, **kwargs):
         if not self.slug:

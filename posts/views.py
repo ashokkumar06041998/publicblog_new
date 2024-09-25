@@ -33,8 +33,6 @@ class PostListView(ListView):
     template_name = 'posts/home.html'
     context_object_name = 'posts'
     login_url = "account_app:login"
-    paginate_by =30
-
 
     def post(self, request, *args, **kwargs):
         if request.content_type == 'application/json':
@@ -57,82 +55,69 @@ class PostListView(ListView):
         else:
             return JsonResponse({'status': 'error', 'message': 'Unsupported Media Type'}, status=415)
 
+
     def get_queryset(self):
-        query = self.request.GET.get("q", "")
+        query = self.request.GET.get("q", "").strip()
         language_name = self.request.session.get('language')
         category_name = self.request.session.get('category')
-        
-        filters = Q(published=True)  # Base filter for published posts
 
-        # Add language filter if available
-        if language_name:
-            try:
-                language_instance = Language.objects.get(name=language_name)
-                print("language selected")
-                filters &= Q(language=language_instance)
-            except Language.DoesNotExist:
-                pass  # If the language is not found, don't filter by language
+        # Base filter for published posts
+        filters = Q(published=True)
 
-        # Add category filter if available
-        if category_name:
-            try:
-                category_instance = Category.objects.get(name=category_name)
-                print("catergory selected")
-                filters &= Q(category=category_instance)
-            except Category.DoesNotExist:
-                pass  # If the category is not found, don't filter by category
-
-        # Add search query filter if available
-        if query:
+        if query:  # If search query is present, filter only by query
+            print(f"Search query: {query}")
             filters &= (Q(title__icontains=query) | Q(content__icontains=query))
+        else:  # If no search query, filter by language and category
+            # Add language filter if available
+            if language_name:
+                try:
+                    language_instance = Language.objects.get(name=language_name)
+                    print("language selected")
+                    filters &= Q(language=language_instance)
+                except Language.DoesNotExist:
+                    pass  # If the language is not found, don't filter by language
 
+            # Add category filter if available
+            if category_name:
+                try:
+                    category_instance = Category.objects.get(name=category_name)
+                    print("category selected")
+                    filters &= Q(category=category_instance)
+                except Category.DoesNotExist:
+                    pass  # If the category is not found, don't filter by category
+
+        print(f"Filters applied: {filters}")
         # Fetch the filtered queryset
         queryset = Post.objects.filter(filters).order_by('-created', 'title')
-
+        print(f"Queryset results: {[post.title for post in queryset]}")
         return queryset
+
 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['csrf_token'] = get_token(self.request)
 
-        # Retrieve paginated posts 
-        posts = list(context['page_obj'])
+        # Fetch all posts (no pagination)
+        posts = self.get_queryset()
 
-        # Fetch top 10 posts by likes_count and comments_count
-        top_likes_posts = list(Post.objects.filter(published=True).order_by('-likes_count', '-created')[:10])
-        top_comments_posts = list(Post.objects.filter(published=True).order_by('-comments_count', '-created')[:10])
-
-
-        # Remove duplicates
-        popular_posts = list(set(top_likes_posts + top_comments_posts))
-        popular_post_ids = set(post.id for post in popular_posts)
-
-        more_popular_posts = list(Post.objects.filter(
-        published=True
-            ).exclude(id__in=popular_post_ids).order_by('-likes_count', '-created')[:10])
-
-        # Deduplicate posts and popular_posts combined list
-        combined_posts = posts + popular_posts
-
-        # Iterate through the combined list to set the image URLs
-        for post in combined_posts:
+        # Set image URLs for the posts
+        for post in posts:
             post.image_url = post.thumbnail.url if post.thumbnail else settings.MEDIA_URL + 'post/default/default_thumbnail.png'
         
-        for post in more_popular_posts:
-            post.image_url = post.thumbnail.url if post.thumbnail else settings.MEDIA_URL + 'post/default/default_thumbnail.png'
-
-        unique_posts = list({post.id: post for post in combined_posts}.values())
-        post_ids = set(post.id for post in posts)
-        popular_post_ids = set(post.id for post in popular_posts)
-
-        # Splitting posts and popular_posts
-        context['posts'] = [post for post in unique_posts if post.id in post_ids]
-        context['popular_posts'] = [post for post in unique_posts if post.id in popular_post_ids]
-        context['more_popular_posts'] = more_popular_posts
+        context['posts'] = posts
+        context['show_subheader'] = True
 
         return context
+
     
+
+
+
+
+
+
+
 
 
 
@@ -201,6 +186,7 @@ class PostDetailView(DetailView):
 
         context['random_posts'] = self.get_random_posts()
         context['related_posts'] = self.get_related_posts(post)
+        context['show_subheader']=False
         
         return context
 
@@ -308,7 +294,11 @@ class PostCreateView(CreateView):
 
         return super().form_valid(form)
 
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['show_subheader'] = False  
+        return context
+    
 
 
 
@@ -348,7 +338,11 @@ class PostUpdateView(LoginRequiredMixin,UpdateView):
         messages.success(self.request, f"The post {post.title} has been successfully updated.")
         return super().form_valid(form)
 
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['show_subheader'] = False  
+        return context
+    
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
@@ -363,7 +357,12 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
         logger.info("Inside delete method")
         messages.success(self.request, "The post has been successfully deleted.")
         return super().delete(request, *args, **kwargs)
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['show_subheader'] = False  
+        return context
+    
 
 
 
@@ -383,6 +382,7 @@ class UserDashBoard(LoginRequiredMixin,ListView):
         context['bending_posts'] = Post.objects.filter(author=user, published=False)
         context['published_count'] = Post.objects.filter(author=user, published=True).count()
         context['bending_count'] =Post.objects.filter(author=user, published=False).count()
+        context['show_subheader']=False
         return context
     
 
@@ -396,7 +396,19 @@ class UserDashboardPostDetailView(LoginRequiredMixin,DetailView):
         slug = self.kwargs.get("slug")
         return get_object_or_404(Post, slug=slug, author=self.request.user)
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['show_subheader'] = False  
+        return context
+    
 
+class TutorialsView(TemplateView):
+    template_name = 'posts/tutorial.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['show_subheader'] = False  
+        return context
 
 
 

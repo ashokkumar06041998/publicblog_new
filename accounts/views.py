@@ -216,7 +216,8 @@ def password_reset_request(request):
                         print("Email sent to the user")
                     except Exception as e:
                         print(f"Error sending email: {e}")
-                        return HttpResponse('Error sending email')
+                        return HttpResponse(f'Error sending email: {e}')
+                    request.session['reset_email'] = get_email
                     return redirect('account_app:password_reset_done')
     else:
         password_reset_form=PasswordResetForm()

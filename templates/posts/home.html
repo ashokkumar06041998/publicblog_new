@@ -24,7 +24,7 @@
                     {% for post in posts %}
                         
                     <!-- POST Start -->
-                    <div class="post" data-url="{{post.get_absolute_url}}">
+                    <div class="post" data-url="{{ post.get_absolute_url }}">
                         <div class="post-ab-info">
                             {% if post.author.profile_picture %}
                             <img src="{{post.author.profile_picture.url }}" alt="" class="post-ab-info-img">
@@ -41,9 +41,9 @@
                             </div>
                         </div>
                         <div class="post-dlc-info">
-                            <div class="post-dlc-icon"> <i class="fa-regular fa-thumbs-up"></i></div>
-                            <div class="post-dlc-icon"><i class="fa-solid fa-comment"></i></i></div>
-                            <div class="post-dlc-date">{{post.get_display_date|date:"d" }}{{post.get_display_date|date:"M Y" }}</div>
+                            <div class="post-dlc-icon-text"> <i class="fa-regular fa-thumbs-up"></i><span class"lc-count">{{post.likes_count}}&nbsp;&nbsp;likes</span></div>
+                            <div class="post-dlc-icon-text"><i class="fa-solid fa-comment"></i></i><span class"lc-count">{{post.comments_count}}&nbsp;&nbsp;comments</span></div>
+                            <div class="post-dlc-date">{{ post.get_relative_or_normal_date }}</div>
                             </div>
                     </div>
                     <!-- POST END -->
@@ -81,8 +81,10 @@
 
 
     </div>
-    <!-- wrapper-one Wrapper  -->
+    <!-- wrapper-one Wrapper END -->
+
     
+
 
     
     <!-- wrapper-two Wrapper -->
@@ -92,7 +94,7 @@
         <div class="smallposts-list">
 
 
-
+           <h2>Explore More . . .</h2>
             {% if popular_posts %}
             {% for popular in popular_posts %}
             <div class="smallpost" data-url="{{popular.get_absolute_url}}">
@@ -102,7 +104,7 @@
                 </div>
                 <div class="smallpost-meta">
                     <span class="smallpost-author">{{popular.author.username|default:"public user"}}</span>
-                    <span class="smallpost-date">{{popular.get_display_date|date:"d" }}{{popular.get_display_date|date:"M Y" }}</span>
+                    <span class="smallpost-date">{{ popular.get_relative_or_normal_date }}</span>
                 </div>
             </div>
             {% endfor %}

@@ -1,4 +1,128 @@
-<!DOCTYPE html>
+
+
+
+     
+{% extends "posts/index.html" %}
+{% load static %}
+
+
+{% block fortitle %} {% endblock fortitle %}
+{% block forstyle %}
+
+{%endblock forstyle %}
+
+{% block forcontent %}
+
+
+    <!-- wrapper-one Wrapper  -->
+    <div class="wrapper-one">
+
+       
+        <div class="deletepage-wrapper">
+            <div class="delete-confirmation">
+                <h2>Are you certain about deleting this? It cannot be undone</h2>
+                <p>{{ object.title }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="button-row">
+                        <button type="submit"  class="btn btn-danger">Yes</button>
+                        <a href="{% url 'blogpost:user-dashboard' %}" class="btn btn-secondary">No</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- adds-Wrapper-big-->
+        <div class="adds-wrapper-big">
+
+        </div>    
+        <!-- adds-Wrapper-big END-->
+
+
+        
+            <!-- pagination Wrapper  -->
+            {% comment %} <div class="pagination-wrapper ">
+                <div class="pagination-container">
+                    <a href="?page=1">First</a>
+                    <a href="?page=prev">Previous</a>
+                    <span>Page 1 of 10</span>
+                    <a href="?page=next">Next</a>
+                    <a href="?page=last">Last</a>
+                </div>
+            </div> {% endcomment %}
+            <!-- pagination Wrapper  END-->
+
+
+    </div>
+    <!-- wrapper-one Wrapper  -->
+    
+
+    
+    <!-- wrapper-two Wrapper -->
+    <div class="wrapper-two">
+
+            <!-- smallpost-list -->
+        <div class="smallposts-list">
+
+
+            <h2>Explore More . . .</h2>
+            {% if explore_posts %}
+            {% for post in explore_posts %}
+            <div class="smallpost" data-url="{{post.get_absolute_url}}">
+                <div class="smallpost-img-title">
+                    <img src="{{post.image_url}}" alt="Image" alt="image" class="smallpost-img">
+                    <div class="smallpost-title">{{post.title}}</div>
+                </div>
+                <div class="smallpost-meta">
+                    <span class="smallpost-author">{{post.author.username|default:"public user"}}</span>
+                    <span class="smallpost-date">{{post.get_relative_or_normal_date}}</span>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}           
+
+
+        </div>  
+        <!-- smallpost-list END -->
+
+
+        <!-- adds-wrapper-small -->
+        <div class="adds-wrapper-small">
+                    
+        </div>
+        <!-- adds-wrapper-small END-->
+
+
+    </div>
+        <!-- wrapper-two Wrapper END-->
+
+
+
+
+{% endblock forcontent %} 
+
+
+{% block forscript %}
+
+{% endblock forscript%}
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -66,6 +190,7 @@
         .btn-danger:hover, .btn-secondary:hover {
             opacity: 0.9;
         }
+
     </style>
 </head>
 <body>
@@ -90,4 +215,4 @@
 </script>
 
 </body>
-</html>
+</html> {% endcomment %}

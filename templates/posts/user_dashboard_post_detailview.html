@@ -1,52 +1,178 @@
+
+     
+{% extends "posts/index.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Post Detail</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'posts/css/user_dashboard_post_detailview.css' %}">
-    <style>
 
-    </style>
-  </head>
-  <body>
+{% block fortitle %} {% endblock fortitle %}
+{% block forstyle %}
 
-    <a href="javascript:history.back()" class="go-back-link">
-      <i class="fa-solid fa-arrow-left"></i>Go Back to Dashboard
-  </a>
+{%endblock forstyle %}
 
-    <div class="post-detail-container">
-      <div class="post-header">
-        <h1 class="post-title">{{ post.title }}</h1>
-        <div class="post-meta">
-          <span>Category: {{ post.category }}</span>
-          <span>Language: {{ post.language }}</span>
-          <span>Created: {{ post.created }}</span>
-          <span>Updated: {{ post.updated }}</span>
-          <span>Likes: {{ post.likes_count }}</span>
-          <span>Comments: {{ post.comments_count }}</span>
-          <span>Published: {{ post.published }}</span>
-        </div>
-      </div>
+{% block forcontent %}
 
-      <div class="post-thumbnail">
-        <img src="{{ post.thumbnail.url }}" alt="Post Thumbnail">
-        <div class="thumbnail-title">{{ post.thumbnail_title }}</div>
-      </div>
 
-      <div class="post-content">
-        {{ post.content|safe }}
-      </div>
+    <!-- wrapper-one Wrapper  -->
+    <div class="wrapper-one">
 
-      <div class="post-actions">
-        <button id="update-btn" data-url="{% url 'blogpost:post-update' slug=post.slug %}">Update</button>
-        <button id="delete-btn" data-url="{% url 'blogpost:post-delete' slug=post.slug %}" >Delete</button>
-      </div>
+                <!-- Post Detail Wrapper Start -->
+                <div class="post-detail-wrapper">
+
+                      <div class="dboard-pd-actions">
+                          <button id="update-btn" data-url="{% url 'blogpost:post-update' slug=post.slug %}">Edit</button>
+                          <button id="delete-btn" data-url="{% url 'blogpost:post-delete' slug=post.slug %}" >Delete</button>
+                      </div>
+
+                      <div class="dboard-pd-meta">
+                        <table>
+                            <tr>
+                                <td>Category</td>
+                                <td>{{ post.category }}</td>
+                            </tr>
+                            <tr>
+                                <td>Language</td>
+                                <td>{{ post.language }}</td>
+                            </tr>
+                            <tr>
+                                <td>Created</td>
+                                <td>{{ post.created }}</td>
+                            </tr>
+                            <tr>
+                                <td>Updated</td>
+                                <td>{{ post.updated }}</td>
+                            </tr>
+                            <tr>
+                                <td>Likes</td>
+                                <td>{{ post.likes_count }}</td>
+                            </tr>
+                            <tr>
+                                <td>Comments</td>
+                                <td>{{ post.comments_count }}</td>
+                            </tr>
+                            <tr>
+                                <td>State:</td>
+                                <td>{% if post.published %}Published{% else %}Unpublished{% endif %}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+
+                      {% comment %} <div class="dboard-pd-meta">
+                        <span>Category: {{ post.category }}</span>
+                        <span>Language: {{ post.language }}</span>
+                        <span>Created: {{ post.created }}</span>
+                        <span>Updated: {{ post.updated }}</span>
+                        <span>Likes: {{ post.likes_count }}</span>
+                        <span>Comments:{{ post.comments_count }}</span>
+                        <span>State: {% if post.published %}Published{% else %}Unpublished{% endif %}</span>
+                      </div> {% endcomment %}
+
+                  <!-- Post Detail  main content -->
+                  <div class="post-detail-main-content">
+                      <h5 class="post-detail-title">{{ post.title }}</h5>
+                      {% comment %} <p class="post-detail-date">{{post.get_date_label}}{{post.get_relative_or_normal_date}}</p> {% endcomment %}
+                      <div class="post-detail-header">
+                          {% if post.author.profile_picture %}
+                              <img src="{{ post.author.profile_picture.url }}" alt="" class="post-detail-author-image">
+                          {% else %}
+                              <img src="{% static 'posts/images/default_profile.png' %}" alt="Author" class="post-detail-author-image">
+                          {% endif %}
+                          <div class="post-detail-author">{{ post.author.username|default:"public user" }}</div>
+      
+                          <div class="post-detail-share-icons">
+                              <a href="https://api.whatsapp.com/send?text=Check%20this%20out!%0A%0A{{ share_post_title }}%0A%0A{{ share_post_description }}%0A%0A{{ share_post_thumbnail }}%0A%0A{{ share_post_url }}" target="_blank">
+                                  <img src="{% static 'posts/images/s_wa.png' %}" alt="WhatsApp">
+                              </a>
+                              <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_post_url }}" target="_blank">
+                                  <img src="{% static 'posts/images/s_fb.png' %}" alt="Facebook">
+                              </a>
+                              <a href="https://twitter.com/intent/tweet?text={{ share_post_title }}%0A%0A{{ share_post_description }}%0A%0A{{ share_post_url }}" target="_blank">
+                                  <img src="{% static 'posts/images/s_x.png' %}" alt="Twitter">
+                              </a>
+                          </div>
+                      </div>
+                      <div class="post-detail-content">
+                          {{ post.content|safe }}
+                          <img class="thumbnail-image" src="{{ post.thumbnail.url }}" alt="thumbnail">
+                      </div>
+                  </div>
+                  <!-- Post Detail  main content END -->
+              </div>
+              <!-- Post Detail Wrapper End -->
+
+
+              
+        <!-- adds-Wrapper-big-->
+        <div class="adds-wrapper-big">
+
+        </div>    
+        <!-- adds-Wrapper-big END-->
+
+
+        
+            <!-- pagination Wrapper  -->
+            {% comment %} <div class="pagination-wrapper ">
+                <div class="pagination-container">
+                    <a href="?page=1">First</a>
+                    <a href="?page=prev">Previous</a>
+                    <span>Page 1 of 10</span>
+                    <a href="?page=next">Next</a>
+                    <a href="?page=last">Last</a>
+                </div>
+            </div> {% endcomment %}
+            <!-- pagination Wrapper  END-->
+
+
     </div>
+    <!-- wrapper-one Wrapper  -->
+    
 
+    
+    <!-- wrapper-two Wrapper -->
+    <div class="wrapper-two">
+
+            <!-- smallpost-list -->
+        <div class="smallposts-list">
+
+
+          <h2>Explore More . . .</h2>
+          {% if explore_posts %}
+          {% for post in explore_posts %}
+          <div class="smallpost" data-url="{{post.get_absolute_url}}">
+              <div class="smallpost-img-title">
+                  <img src="{{post.image_url}}" alt="Image" alt="image" class="smallpost-img">
+                  <div class="smallpost-title">{{post.title}}</div>
+              </div>
+              <div class="smallpost-meta">
+                  <span class="smallpost-author">{{post.author.username|default:"public user"}}</span>
+                  <span class="smallpost-date">{{post.get_relative_or_normal_date}}</span>
+              </div>
+          </div>
+          {% endfor %}
+          {% endif %}        
+
+
+        </div>  
+        <!-- smallpost-list END -->
+
+
+        <!-- adds-wrapper-small -->
+        <div class="adds-wrapper-small">
+                    
+        </div>
+        <!-- adds-wrapper-small END-->
+
+
+    </div>
+        <!-- wrapper-two Wrapper END-->
+
+
+
+
+{% endblock forcontent %} 
+
+
+{% block forscript %}
     <script>
         document.getElementById('update-btn').addEventListener('click', function() {
             var url = this.getAttribute('data-url');
@@ -67,5 +193,18 @@
       });
       
     </script>
-  </body>
-</html>
+{% endblock forscript%}
+
+
+
+
+
+
+
+    
+
+
+
+
+
+

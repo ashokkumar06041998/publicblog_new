@@ -171,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // SEARCH Script
     const searchOverlay = document.getElementById('search-overlay');
     const searchIcon = document.getElementById('search-icon');
+    const searchInput = document.getElementById('search-input');
 
     function toggleSearch() {
         if (searchOverlay.style.display === 'flex') {
@@ -178,6 +179,9 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             searchOverlay.style.display = 'flex';
             closeMenu(); // Ensure menu is closed when search is opened
+            setTimeout(() => {
+                searchInput.focus();
+            }, 100);
 
             // Hide the searchOverlay after 10 seconds (optional)
             // setTimeout(function () {
@@ -187,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     searchIcon.addEventListener('click', function (e) {
-        e.stopPropagation(); // Stop event propagation to prevent conflicts
+        e.stopPropagation(); 
         toggleSearch();
     });
 
@@ -366,10 +370,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.post').forEach(function(div) {
-        div.addEventListener('click', function() {
-            var url = div.getAttribute('data-url');
-            window.location.href = url;
+    // document.querySelectorAll('.post').forEach(post => {
+    //     post.addEventListener('click', function() {
+    //         const shouldRedirect = this.getAttribute('data-redirect') === 'true'; 
+    //         const url = this.getAttribute('data-url'); 
+    
+    //         if (shouldRedirect) {
+    //             window.location.href = url; 
+    //         } else {
+    //             alert('No redirect for this post'); 
+               
+    //         }
+    //     });
+    // })
+
+    document.querySelectorAll('.post').forEach(post => {
+        post.addEventListener('click', function() {
+            const url = this.getAttribute('data-url');     
+            if (url) {
+                window.location.href = url; 
+            } 
         });
     });
 

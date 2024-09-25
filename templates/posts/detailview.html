@@ -30,8 +30,10 @@
 
         <!-- Post Detail Wrapper Start -->
         <div class="post-detail-wrapper">
+            <!-- Post Detail  main content -->
             <div class="post-detail-main-content">
                 <h5 class="post-detail-title">{{ post.title }}</h5>
+                <p class="post-detail-date">{{post.get_date_label}}{{post.get_relative_or_normal_date}}</p>
                 <div class="post-detail-header">
                     {% if post.author.profile_picture %}
                         <img src="{{ post.author.profile_picture.url }}" alt="" class="post-detail-author-image">
@@ -51,15 +53,15 @@
                             <img src="{% static 'posts/images/s_x.png' %}" alt="Twitter">
                         </a>
                     </div>
-
                 </div>
-    
                 <div class="post-detail-content">
                     {{ post.content|safe }}
                     <img class="thumbnail-image" src="{{ share_post_thumbnail }}" alt="thumbnail">
                 </div>
             </div>
-    
+            <!-- Post Detail  main content END -->
+
+            <!-- Post Detail  comment like section -->
             <div class="post-detail-comment-section" data-authenticated="{{ check_user }}">
                 <div class="comments-container">
                     <div class="comment-vote-container">
@@ -79,19 +81,19 @@
                         {% if comment.user %}
                         <span>{{ comment.user.username }} :
                             {% if not comment.published %}
-                            <span class="pending-text">[pending]</span>
+                            <span class="pending-text"></span>
                             {% endif %}
                         </span>
                         {% elif comment.name %}
                         <span>{{ comment.name }} :
                             {% if not comment.published %}
-                            <span class="pending-text">[pending]</span>
+                            <span class="pending-text"></span>
                             {% endif %}
                         </span>
                         {% else %}
                         <span>public user :
                             {% if not comment.published %}
-                            <span class="pending-text">[pending]</span>
+                            <span class="pending-text"></span>
                             {% endif %}
                         </span>
                         {% endif %}
@@ -99,11 +101,11 @@
                         {% if comment.published %}
                         <p>{{ comment.text }}</p>
                         {% else %}
-                        <p>waiting for approval</p>
+                        <p>this comment is being reviewed.</p>
                         {% endif %}
                     </div>
                     {% empty %}
-                    <div class="no-comments-yet">No comments yet.</div>
+                    <div class="no-comments-yet"><i class="fa-regular fa-hand-point-down"></i>&nbsp;&nbsp;Be the first to comment.</div>
                     {% endfor %}
                 </div>
                 <div class="comment-form-container">
@@ -115,6 +117,7 @@
                     </form>
                 </div>
             </div>
+            <!-- Post Detail  comment like section END-->
         </div>
         <!-- Post Detail Wrapper End -->
     
@@ -154,7 +157,7 @@
     <div class="smallposts-list">
 
 
-
+        <h2>You May Also Like . . .</h2>
         {% if random_posts %}
         {% for post in random_posts %}
         <div class="smallpost" data-url="{{post.get_absolute_url}}">
@@ -164,7 +167,7 @@
             </div>
             <div class="smallpost-meta">
                 <span class="smallpost-author">{{post.author.username|default:"public user"}}</span>
-                <span class="smallpost-date">{{post.get_display_date|date:"d" }}{{post.get_display_date|date:"M Y" }}</span>
+                <span class="smallpost-date">{{post.get_relative_or_normal_date}}</span>
             </div>
         </div>
         {% endfor %}
@@ -272,7 +275,7 @@
                 const newComment = document.createElement('div');
                 newComment.classList.add('comment');
                 if(nameInput.trim()===""){
-                    newComment.innerHTML =`<span>{{request.user.username}} : <span class="Pending-text">[Pending]</span></span><span class="comment-date">just now</span><p>${commentInputText}</p>`;
+                    newComment.innerHTML =`<span>{{request.user.username}} : <span class="Pending-text"></span></span><span class="comment-date">just now</span><p>${commentInputText}</p>`;
                 }else{
                     newComment.innerHTML =`<span>${nameInput}: <span class="Pending-text">[Pending]</span></span><span class="comment-date">just now</span><p>${commentInputText}</p>`;              
                 }
