@@ -102,7 +102,7 @@ class Post(models.Model):
             allowed_extensions =['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp',]
             file_extention=os.path.splitext(self.thumbnail.name)[1].lower()
             if file_extention not in  allowed_extensions:
-                raise ValidationError(f"  Thumbnail Error : unsuportted  format '{file_extention}', allowed extentions are {",".join(allowed_extensions)}")
+                raise ValidationError(f"  Thumbnail Error : unsuportted  format '{file_extention}', allowed extentions are {", ".join(allowed_extensions)}")
 
 
     def __str__(self):
