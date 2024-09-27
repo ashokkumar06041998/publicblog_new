@@ -54,7 +54,7 @@
                     <!-- DASHBOARD Wrapper  -->
                     <div class="dboard-user-info-wrapper">
                         <div class="dboard-user-profile">
-                            <h2>John Doe</h2>
+                            <h2>{% if request.user.username %}</h2>
                             {% if request.user.profile_picture %}
                             <img src="{{request.user.profile_picture.url }}" alt="user profile picture">
                             {%else%}
