@@ -277,7 +277,7 @@
                 if(nameInput.trim()===""){
                     newComment.innerHTML =`<span>{{request.user.username}} : <span class="Pending-text"></span></span><span class="comment-date">just now</span><p>${commentInputText}</p>`;
                 }else{
-                    newComment.innerHTML =`<span>${nameInput}: <span class="Pending-text"></span></span><span class="comment-date">just now</span><p>${commentInputText}</p>`;              
+                    newComment.innerHTML =`<span>${nameInput}: <span class="Pending-text">[Pending]</span></span><span class="comment-date">just now</span><p>${commentInputText}</p>`;              
                 }
             
 
